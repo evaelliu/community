@@ -1,0 +1,18 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: ${APPLICATION_NAME:community-auth}
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${REGISTER_HOST:nacos}:${REGISTER_PORT:8848}
+        namespace: dev
+      config:
+        server-addr: ${REGISTER_HOST:nacos}:${REGISTER_PORT:8848}
+        namespace: dev
+        #file-extension: yml
+  datasource:
+    url: jdbc:mysql://mysql:3306/community
+    username: root
+    password: community123

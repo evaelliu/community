@@ -1,0 +1,9 @@
+FROM mcr.microsoft.com/java/jdk:15-zulu-alpine
+
+RUN echo "http://mirrors.ustc.edu.cn/alpine/v3.9/main/" > /etc/apk/repositories \
+        && apk update \
+        && apk upgrade \
+        && apk add --no-cache bash bash-doc bash-completion \
+        && apk add --no-cache supervisor \
+        && rm -rf /var/cache/apk/*
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf","-n"]

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_DIR" value="/var/logs/community"/>
+    <timestamp key="byDay" datePattern="yyyy-MM-dd"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SYS-LOG-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file> ${LOG_DIR}/${APPLICATION_NAME}.stdout.log </file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- keep 30 days' worth of history capped at 3GB total size -->
+            <fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}/${APPLICATION_NAME}.stdout-%d{yyyy-MM-dd}.log.%i</fileNamePattern>
+            <maxFileSize>200MB</maxFileSize>  <!--SINGLE FILE SIZE-->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>  <!--PATTERN FILE TOTAL SIZE-->
+        </rollingPolicy>
+    </appender>
+
+    <appender name="SYS-LOG-FILE-ERR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file> ${LOG_DIR}/${APPLICATION_NAME}.stderr.log </file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- keep 30 days' worth of history capped at 3GB total size -->
+            <fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}/${APPLICATION_NAME}.stderr-%d{yyyy-MM-dd}.log.%i</fileNamePattern>
+            <maxFileSize>200MB</maxFileSize>  <!--SINGLE FILE SIZE-->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>  <!--PATTERN FILE TOTAL SIZE-->
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="SYS-LOG-FILE"/>
+        <appender-ref ref="SYS-LOG-FILE-ERR"/>
+    </root>
+</configuration>

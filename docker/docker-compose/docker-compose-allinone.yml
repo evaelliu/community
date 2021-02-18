@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+
+  community-allinone:
+    image: vpnbase:15
+    container_name: community
+    restart: always
+    networks:
+      community-net:
+    external_links:
+      - community-nacos:nacos
+      - community-redis:redis
+      - community-mysql:mysql
+    ports:
+      - 8088:8088
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime
+      - /data:/data:z
+      - /run/supervisor/vpn-allinone.supervisord.conf:/etc/supervisor.d/supervisord.ini
+
+networks:
+  community-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.201.0/24
+          gateway: 192.168.201.1

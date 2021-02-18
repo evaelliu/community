@@ -1,0 +1,39 @@
+version: '3.1'
+services:
+  elasticsearch:
+    image: elasticsearch:7.9.3
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      discovery.type: single-node
+      TZ: Asia/Shanghai
+
+  oap:
+    image: apache/skywalking-oap-server:latest
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+    ports:
+      - 11800:11800
+      - 12800:12800
+    environment:
+      TZ: Asia/Shanghai
+      SW_STORAGE: elasticsearch
+      SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
+#    volumes:
+#      - ./config:/skywalking/config
+
+  skywalking-ui:
+    image: apache/skywalking-ui:latest
+    depends_on:
+      - oap
+    links:
+      - oap
+    ports:
+      - 18080:8080
+    environment:
+      SW_OAP_ADDRESS: oap:12800
+      TZ: Asia/Shanghai
+
